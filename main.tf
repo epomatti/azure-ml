@@ -61,7 +61,7 @@ module "data_lake" {
   resource_group_name           = azurerm_resource_group.default.name
   location                      = azurerm_resource_group.default.location
   public_network_access_enabled = var.dsl_public_network_access_enabled
-  ip_network_rules              = var.dsl_ip_network_rules
+  ip_network_rules              = [var.allowed_ip_address]
 }
 
 module "mssql" {
@@ -75,20 +75,24 @@ module "mssql" {
   max_size_gb                   = var.mssql_max_size_gb
   admin_login                   = var.mssql_admin_login
   admin_login_password          = var.mssql_admin_login_password
-  localfw_start_ip_address      = var.mssql_localfw_start_ip_address
-  localfw_end_ip_address        = var.mssql_localfw_end_ip_address
+  localfw_start_ip_address      = var.allowed_ip_address
+  localfw_end_ip_address        = var.allowed_ip_address
 }
 
 module "ml" {
   source              = "./modules/ml"
-  workload            = var.workload
+  workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  application_insights_id = module.monitor.application_insights_id
-  storage_account_id      = module.storage.storage_account_id
-  key_vault_id            = module.keyvault.key_vault_id
-  container_registry_id   = module.cr.id
+  instance_vm_size                = var.mlw_instance_vm_size
+  instance_node_public_ip_enabled = var.mlw_instance_node_public_ip_enabled
+
+  public_network_access_enabled = var.mlw_public_network_access_enabled
+  application_insights_id       = module.monitor.application_insights_id
+  storage_account_id            = module.storage.storage_account_id
+  key_vault_id                  = module.keyvault.key_vault_id
+  container_registry_id         = module.cr.id
 
   data_lake_id = module.data_lake.id
 }

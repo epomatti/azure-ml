@@ -8,6 +8,23 @@ variable "workload" {
   default = "litware"
 }
 
+variable "allowed_ip_address" {
+  type = string
+}
+
+### AML ###
+variable "mlw_public_network_access_enabled" {
+  type = bool
+}
+
+variable "mlw_instance_node_public_ip_enabled" {
+  type = bool
+}
+
+variable "mlw_instance_vm_size" {
+  type = string
+}
+
 ### MSSQL ###
 variable "mssql_public_network_access_enabled" {
   type = bool
@@ -29,19 +46,7 @@ variable "mssql_admin_login_password" {
   type = string
 }
 
-variable "mssql_localfw_start_ip_address" {
-  type = string
-}
-
-variable "mssql_localfw_end_ip_address" {
-  type = string
-}
-
 ### Data Lake ###
 variable "dsl_public_network_access_enabled" {
   type = bool
-}
-
-variable "dsl_ip_network_rules" {
-  type = list(string)
 }

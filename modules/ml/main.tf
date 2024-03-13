@@ -20,6 +20,7 @@ resource "azurerm_machine_learning_workspace" "default" {
   storage_account_id      = var.storage_account_id
   container_registry_id   = var.container_registry_id
 
+  public_network_access_enabled  = var.public_network_access_enabled
   primary_user_assigned_identity = azurerm_user_assigned_identity.mlw.id
 
   identity {
@@ -30,11 +31,9 @@ resource "azurerm_machine_learning_workspace" "default" {
     ]
   }
 
-  # encryption {
-  #   user_assigned_identity_id = azurerm_user_assigned_identity.mlw.id
-  #   key_vault_id              = azurerm_key_vault.example.id
-  #   key_id                    = azurerm_key_vault_key.example.id
-  # }
+  managed_network {
+    isolation_mode = "AllowOnlyApprovedOutbound"
+  }
 
   depends_on = [
     azurerm_role_assignment.key_vault,
@@ -90,10 +89,15 @@ resource "azurerm_role_assignment" "lake_contributor" {
   principal_id         = azurerm_user_assigned_identity.mlw.principal_id
 }
 
-# resource "azurerm_machine_learning_datastore_datalake_gen2" "lake" {
-#   name                 = "lake"
-#   workspace_id         = azurerm_machine_learning_workspace.default.id
-#   storage_container_id = var.data_lake_id
+### Compute ###
+resource "azurerm_machine_learning_compute_instance" "dev1" {
+  name                          = "dev1"
+  location                      = var.location
+  machine_learning_workspace_id = azurerm_machine_learning_workspace.default.id
+  virtual_machine_size          = var.instance_vm_size
+  authorization_type            = "personal"
 
-#   depends_on = [azurerm_role_assignment.lake]
-# }
+  # ssh {
+  #   public_key = var.ssh_key
+  # }
+}
