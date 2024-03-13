@@ -27,12 +27,6 @@ resource "azurerm_resource_group" "default" {
   location = var.location
 }
 
-resource "azurerm_user_assigned_identity" "mlw" {
-  name                = "id-mlw"
-  location            = azurerm_resource_group.default.location
-  resource_group_name = azurerm_resource_group.default.name
-}
-
 module "monitor" {
   source              = "./modules/monitor"
   workload            = var.workload
@@ -49,6 +43,13 @@ module "storage" {
 
 module "keyvault" {
   source              = "./modules/keyvault"
+  workload            = "${var.workload}${local.affix}"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+}
+
+module "cr" {
+  source              = "./modules/cr"
   workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
@@ -84,11 +85,12 @@ module "ml" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  user_assigned_identity  = azurerm_user_assigned_identity.mlw.id
   application_insights_id = module.monitor.application_insights_id
   storage_account_id      = module.storage.storage_account_id
   key_vault_id            = module.keyvault.key_vault_id
-  data_lake_id            = module.data_lake.id
+  container_registry_id   = module.cr.id
+
+  data_lake_id = module.data_lake.id
 }
 
 # module "vnet" {
