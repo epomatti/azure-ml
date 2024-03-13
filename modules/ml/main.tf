@@ -12,7 +12,7 @@ resource "random_string" "affix" {
 }
 
 resource "azurerm_machine_learning_workspace" "example" {
-  name                    = "mlw-${var.workload}${local.random_string.result}"
+  name                    = "mlw-${var.workload}${random_string.affix.result}"
   location                = var.location
   resource_group_name     = var.resource_group_name
   application_insights_id = var.application_insights_id
