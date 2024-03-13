@@ -10,6 +10,10 @@ variable "workload" {
   type = string
 }
 
+variable "user_assigned_identity" {
+  type = string
+}
+
 variable "application_insights_id" {
   type = string
 }
@@ -19,5 +23,9 @@ variable "key_vault_id" {
 }
 
 variable "storage_account_id" {
+  type = string
+}
+
+variable "data_lake_id" {
   type = string
 }

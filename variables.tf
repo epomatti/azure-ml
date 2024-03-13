@@ -36,3 +36,12 @@ variable "mssql_localfw_start_ip_address" {
 variable "mssql_localfw_end_ip_address" {
   type = string
 }
+
+### Data Lake ###
+variable "dsl_public_network_access_enabled" {
+  type = bool
+}
+
+variable "dsl_ip_network_rules" {
+  type = list(string)
+}

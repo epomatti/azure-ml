@@ -4,12 +4,33 @@ terraform {
       source  = "hashicorp/azurerm"
       version = "3.95.0"
     }
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "2.47.0"
+    }
   }
+}
+
+resource "random_string" "affix" {
+  length  = 6
+  special = false
+  upper   = false
+  numeric = true
+}
+
+locals {
+  affix = random_string.affix.result
 }
 
 resource "azurerm_resource_group" "default" {
   name     = "rg-${var.workload}"
   location = var.location
+}
+
+resource "azurerm_user_assigned_identity" "mlw" {
+  name                = "id-mlw"
+  location            = azurerm_resource_group.default.location
+  resource_group_name = azurerm_resource_group.default.name
 }
 
 module "monitor" {
@@ -21,16 +42,25 @@ module "monitor" {
 
 module "storage" {
   source              = "./modules/storage"
-  workload            = var.workload
+  workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 }
 
 module "keyvault" {
   source              = "./modules/keyvault"
-  workload            = var.workload
+  workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+}
+
+module "data_lake" {
+  source                        = "./modules/datalake"
+  workload                      = "${var.workload}${local.affix}"
+  resource_group_name           = azurerm_resource_group.default.name
+  location                      = azurerm_resource_group.default.location
+  public_network_access_enabled = var.dsl_public_network_access_enabled
+  ip_network_rules              = var.dsl_ip_network_rules
 }
 
 module "mssql" {
@@ -54,9 +84,11 @@ module "ml" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
+  user_assigned_identity  = azurerm_user_assigned_identity.mlw.id
   application_insights_id = module.monitor.application_insights_id
   storage_account_id      = module.storage.storage_account_id
   key_vault_id            = module.keyvault.key_vault_id
+  data_lake_id            = module.data_lake.id
 }
 
 # module "vnet" {

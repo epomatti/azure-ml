@@ -1,14 +1,7 @@
 data "azurerm_client_config" "current" {}
 
-resource "random_string" "affix" {
-  length  = 6
-  special = false
-  upper   = false
-  numeric = true
-}
-
 resource "azurerm_key_vault" "default" {
-  name                       = "kv-${var.workload}${random_string.affix.result}"
+  name                       = "kv-${var.workload}"
   location                   = var.location
   resource_group_name        = var.resource_group_name
   tenant_id                  = data.azurerm_client_config.current.tenant_id
