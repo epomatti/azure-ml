@@ -22,6 +22,12 @@ resource "azurerm_storage_account" "lake" {
     virtual_network_subnet_ids = []
     bypass                     = ["AzureServices"]
   }
+
+  lifecycle {
+    ignore_changes = [
+      network_rules[0].private_link_access
+    ]
+  }
 }
 
 resource "azurerm_role_assignment" "adlsv2" {

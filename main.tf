@@ -56,6 +56,11 @@ module "cr" {
   location            = azurerm_resource_group.default.location
 }
 
+module "entra" {
+  source   = "./modules/entra"
+  workload = var.workload
+}
+
 module "data_lake" {
   source                        = "./modules/datalake"
   workload                      = "${var.workload}${local.affix}"

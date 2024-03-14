@@ -9,4 +9,11 @@ resource "azurerm_machine_learning_compute_instance" "dev1" {
   ssh {
     public_key = var.ssh_public_key
   }
+
+  lifecycle {
+    ignore_changes = [
+      # This will be managed by the Machine Learning service
+      subnet_resource_id
+    ]
+  }
 }
