@@ -21,6 +21,10 @@ variable "mlw_instance_node_public_ip_enabled" {
   type = bool
 }
 
+variable "mlw_create_instance" {
+  type = bool
+}
+
 variable "mlw_instance_vm_size" {
   type = string
 }
