@@ -5,9 +5,9 @@ resource "azurerm_user_assigned_identity" "mlw" {
 }
 
 resource "azurerm_machine_learning_workspace" "default" {
-  name                    = "mlw-${var.workload}"
-  location                = var.location
-  resource_group_name     = var.resource_group_name
+  name                = "mlw-${var.workload}"
+  location            = var.location
+  resource_group_name = var.resource_group_name
 
   application_insights_id = var.application_insights_id
   key_vault_id            = var.key_vault_id
@@ -31,6 +31,7 @@ resource "azurerm_machine_learning_workspace" "default" {
 
   depends_on = [
     azurerm_role_assignment.key_vault,
+    azurerm_role_assignment.key_vault_secrets,
     azurerm_role_assignment.storage,
     azurerm_role_assignment.storage_contributor,
     azurerm_role_assignment.application_insights,
@@ -43,6 +44,13 @@ resource "azurerm_machine_learning_workspace" "default" {
 resource "azurerm_role_assignment" "key_vault" {
   scope                = var.key_vault_id
   role_definition_name = "Contributor"
+  principal_id         = azurerm_user_assigned_identity.mlw.principal_id
+}
+
+# Required for compute SSH keys
+resource "azurerm_role_assignment" "key_vault_secrets" {
+  scope                = var.key_vault_id
+  role_definition_name = "Key Vault Secrets Officer"
   principal_id         = azurerm_user_assigned_identity.mlw.principal_id
 }
 
