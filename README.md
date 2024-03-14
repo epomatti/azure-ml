@@ -56,7 +56,7 @@ It might be required to perform manual private endpoint approvals, such as in th
 
 It's time to connect the data sources to the AML workspace. These connections should happen via private endpoints.
 
-**Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - user and password should be enough for this demo.
+**Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
 
 
 

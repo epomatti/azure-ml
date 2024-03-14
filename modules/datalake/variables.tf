@@ -17,3 +17,7 @@ variable "public_network_access_enabled" {
 variable "ip_network_rules" {
   type = list(string)
 }
+
+variable "datastores_app_registration_client_id" {
+  type = string
+}

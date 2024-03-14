@@ -44,3 +44,10 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "data" {
     azurerm_role_assignment.adlsv2,
   ]
 }
+
+# Adds permission to the Application Registration for the datastores
+resource "azurerm_role_assignment" "app_registration" {
+  scope                = azurerm_storage_account.lake.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.datastores_app_registration_client_id
+}

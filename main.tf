@@ -62,12 +62,13 @@ module "entra" {
 }
 
 module "data_lake" {
-  source                        = "./modules/datalake"
-  workload                      = "${var.workload}${local.affix}"
-  resource_group_name           = azurerm_resource_group.default.name
-  location                      = azurerm_resource_group.default.location
-  public_network_access_enabled = var.dsl_public_network_access_enabled
-  ip_network_rules              = [var.allowed_ip_address]
+  source                                = "./modules/datalake"
+  workload                              = "${var.workload}${local.affix}"
+  resource_group_name                   = azurerm_resource_group.default.name
+  location                              = azurerm_resource_group.default.location
+  public_network_access_enabled         = var.dsl_public_network_access_enabled
+  ip_network_rules                      = [var.allowed_ip_address]
+  datastores_app_registration_client_id = module.entra.service_principal_object_id
 }
 
 module "mssql" {
