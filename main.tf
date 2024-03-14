@@ -19,7 +19,8 @@ resource "random_string" "affix" {
 }
 
 locals {
-  affix = random_string.affix.result
+  affix          = random_string.affix.result
+  ssh_public_key = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
 }
 
 resource "azurerm_resource_group" "default" {
@@ -79,14 +80,11 @@ module "mssql" {
   localfw_end_ip_address        = var.allowed_ip_address
 }
 
-module "ml" {
-  source              = "./modules/ml"
+module "ml_workspace" {
+  source              = "./modules/ml/workspace"
   workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
-
-  instance_vm_size                = var.mlw_instance_vm_size
-  instance_node_public_ip_enabled = var.mlw_instance_node_public_ip_enabled
 
   public_network_access_enabled = var.mlw_public_network_access_enabled
   application_insights_id       = module.monitor.application_insights_id
@@ -97,13 +95,19 @@ module "ml" {
   data_lake_id = module.data_lake.id
 }
 
+module "ml_compute" {
+  source   = "./modules/ml/compute"
+  location = azurerm_resource_group.default.location
+
+  machine_learning_workspace_id   = module.ml_workspace.aml_workspace_id
+  instance_vm_size                = var.mlw_instance_vm_size
+  instance_node_public_ip_enabled = var.mlw_instance_node_public_ip_enabled
+  ssh_public_key                  = local.ssh_public_key
+}
+
 # module "vnet" {
 #   source              = "./modules/vnet"
 #   workload            = local.workload
 #   resource_group_name = azurerm_resource_group.default.name
 #   location            = azurerm_resource_group.default.location
 # }
-
-
-
-

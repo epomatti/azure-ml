@@ -1,10 +1,3 @@
-resource "random_string" "affix" {
-  length  = 6
-  special = false
-  upper   = false
-  numeric = true
-}
-
 resource "azurerm_user_assigned_identity" "mlw" {
   name                = "id-mlw"
   location            = var.location
@@ -15,6 +8,7 @@ resource "azurerm_machine_learning_workspace" "default" {
   name                    = "mlw-${var.workload}"
   location                = var.location
   resource_group_name     = var.resource_group_name
+
   application_insights_id = var.application_insights_id
   key_vault_id            = var.key_vault_id
   storage_account_id      = var.storage_account_id
@@ -87,17 +81,4 @@ resource "azurerm_role_assignment" "lake_contributor" {
   scope                = var.data_lake_id
   role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.mlw.principal_id
-}
-
-### Compute ###
-resource "azurerm_machine_learning_compute_instance" "dev1" {
-  name                          = "dev1"
-  location                      = var.location
-  machine_learning_workspace_id = azurerm_machine_learning_workspace.default.id
-  virtual_machine_size          = var.instance_vm_size
-  authorization_type            = "personal"
-
-  # ssh {
-  #   public_key = var.ssh_key
-  # }
 }

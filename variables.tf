@@ -25,6 +25,10 @@ variable "mlw_instance_vm_size" {
   type = string
 }
 
+variable "mlw_instance_ssh_public_key_rel_path" {
+  type = string
+}
+
 ### MSSQL ###
 variable "mssql_public_network_access_enabled" {
   type = bool
