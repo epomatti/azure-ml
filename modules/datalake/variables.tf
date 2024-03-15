@@ -18,6 +18,6 @@ variable "ip_network_rules" {
   type = list(string)
 }
 
-variable "datastores_app_registration_client_id" {
+variable "datastores_service_principal_object_id" {
   type = string
 }

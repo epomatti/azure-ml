@@ -45,9 +45,33 @@ resource "azurerm_storage_data_lake_gen2_filesystem" "data" {
   ]
 }
 
-# Adds permission to the Application Registration for the datastores
-resource "azurerm_role_assignment" "app_registration" {
-  scope                = azurerm_storage_account.lake.id
-  role_definition_name = "Storage Blob Data Contributor"
-  principal_id         = var.datastores_app_registration_client_id
+locals {
+  file = "contacts.csv"
 }
+
+resource "azurerm_storage_blob" "csv" {
+  name                   = local.file
+  storage_account_name   = azurerm_storage_account.lake.name
+  storage_container_name = azurerm_storage_data_lake_gen2_filesystem.data.name
+  type                   = "Block"
+  source                 = "${path.module}/${local.file}"
+}
+
+# Adds permission to the Application Registration for the datastores
+# resource "azurerm_role_assignment" "app_registration_contributor" {
+#   scope                = azurerm_storage_account.lake.id
+#   role_definition_name = "Contributor"
+#   principal_id         = var.datastores_service_principal_object_id
+# }
+
+# resource "azurerm_role_assignment" "app_registration" {
+#   scope                = azurerm_storage_account.lake.id
+#   role_definition_name = "Storage Blob Data Contributor"
+#   principal_id         = var.datastores_service_principal_object_id
+# }
+
+# resource "azurerm_role_assignment" "app_registration_owner" {
+#   scope                = azurerm_storage_account.lake.id
+#   role_definition_name = "Storage Blob Data Owner"
+#   principal_id         = var.datastores_service_principal_object_id
+# }
