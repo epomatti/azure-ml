@@ -60,5 +60,14 @@ It's time to connect the data sources to the AML workspace. These connections sh
 
 **Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
 
+---
+
+### Clean-up
+
+Delete the resources and avoid unplanned costs:
+
+```sh
+terraform destroy -auto-approve
+```
 
 [1]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=azure-cli
