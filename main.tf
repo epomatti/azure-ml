@@ -121,7 +121,7 @@ module "ml_private_endpoint" {
 
 module "ml_compute" {
   source   = "./modules/ml/compute"
-  count    = var.mlw_create_instance ? 1 : 0
+  count    = var.mlw_instance_create_flag ? 1 : 0
   location = azurerm_resource_group.default.location
 
   machine_learning_workspace_id   = module.ml_workspace.aml_workspace_id
