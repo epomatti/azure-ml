@@ -1,10 +1,10 @@
-resource "azurerm_network_interface" "windows" {
-  name                = "nic-windows"
+resource "azurerm_network_interface" "windows11" {
+  name                = "nic-windows11"
   resource_group_name = var.resource_group_name
   location            = var.location
 
   ip_configuration {
-    name                          = "windows"
+    name                          = "windows11"
     subnet_id                     = var.subnet
     private_ip_address_allocation = "Dynamic"
   }
@@ -14,29 +14,29 @@ resource "azurerm_network_interface" "windows" {
   }
 }
 
-resource "azurerm_windows_virtual_machine" "windows" {
-  name                  = "vm-windows"
+resource "azurerm_windows_virtual_machine" "windows11" {
+  name                  = "vm-windows11"
   resource_group_name   = var.resource_group_name
   location              = var.location
   size                  = var.size
-  admin_username        = "winadmin"
+  admin_username        = "winsuer"
   admin_password        = "P@ssw0rd.123"
-  network_interface_ids = [azurerm_network_interface.windows.id]
+  network_interface_ids = [azurerm_network_interface.windows11.id]
 
   identity {
     type = "SystemAssigned"
   }
 
   os_disk {
-    name                 = "osdisk-windows"
+    name                 = "osdisk-windows11"
     caching              = "ReadOnly"
     storage_account_type = "StandardSSD_LRS"
   }
 
   source_image_reference {
-    publisher = "MicrosoftWindowsServer"
-    offer     = "WindowsServer"
-    sku       = "2022-datacenter-g2"
+    publisher = "MicrosoftWindowsDesktop"
+    offer     = "Windows-11"
+    sku       = "win11-23h2-pron"
     version   = "latest"
   }
 }
