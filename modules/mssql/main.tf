@@ -31,6 +31,12 @@ resource "azurerm_mssql_firewall_rule" "local" {
   end_ip_address   = var.localfw_end_ip_address
 }
 
+resource "azurerm_mssql_virtual_network_rule" "default" {
+  name      = "default-subnet"
+  server_id = azurerm_mssql_server.default.id
+  subnet_id = var.subnet_id
+}
+
 # Allow Azure Services to connect.
 resource "azurerm_mssql_firewall_rule" "allow_access_to_azure_services" {
   name             = "AllowAllWindowsAzureIps"

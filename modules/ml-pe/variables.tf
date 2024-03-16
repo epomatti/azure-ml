@@ -1,4 +1,4 @@
-variable "workload" {
+variable "resource_group_name" {
   type = string
 }
 
@@ -6,14 +6,14 @@ variable "location" {
   type = string
 }
 
-variable "resource_group_name" {
+variable "vnet_id" {
   type = string
 }
 
-variable "subnet" {
+variable "subnet_id" {
   type = string
 }
 
-variable "size" {
+variable "aml_workspace_id" {
   type = string
 }

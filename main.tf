@@ -28,6 +28,13 @@ resource "azurerm_resource_group" "default" {
   location = var.location
 }
 
+module "vnet" {
+  source              = "./modules/vnet"
+  workload            = var.workload
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+}
+
 module "monitor" {
   source              = "./modules/monitor"
   workload            = var.workload
@@ -69,6 +76,7 @@ module "data_lake" {
   public_network_access_enabled          = var.dsl_public_network_access_enabled
   ip_network_rules                       = [var.allowed_ip_address]
   datastores_service_principal_object_id = module.entra.service_principal_object_id
+  subnet_id                              = module.vnet.default_subnet_id
 }
 
 module "mssql" {
@@ -84,6 +92,7 @@ module "mssql" {
   admin_login_password          = var.mssql_admin_login_password
   localfw_start_ip_address      = var.allowed_ip_address
   localfw_end_ip_address        = var.allowed_ip_address
+  subnet_id                     = module.vnet.default_subnet_id
 }
 
 module "ml_workspace" {
@@ -101,6 +110,15 @@ module "ml_workspace" {
   data_lake_id = module.data_lake.id
 }
 
+module "ml_private_endpoint" {
+  source              = "./modules/ml-pe"
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  vnet_id             = module.vnet.vnet_id
+  subnet_id           = module.vnet.default_subnet_id
+  aml_workspace_id    = module.ml_workspace.aml_workspace_id
+}
+
 module "ml_compute" {
   source   = "./modules/ml/compute"
   count    = var.mlw_create_instance ? 1 : 0
@@ -112,9 +130,12 @@ module "ml_compute" {
   ssh_public_key                  = local.ssh_public_key
 }
 
-# module "vnet" {
-#   source              = "./modules/vnet"
-#   workload            = local.workload
-#   resource_group_name = azurerm_resource_group.default.name
-#   location            = azurerm_resource_group.default.location
-# }
+module "vm" {
+  source              = "./modules/vm"
+  count               = var.vm_create_flag ? 1 : 0
+  workload            = var.workload
+  resource_group_name = azurerm_resource_group.default.name
+  location            = azurerm_resource_group.default.location
+  size                = var.vm_size
+  subnet              = module.vnet.default_subnet_id
+}

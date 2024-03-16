@@ -9,11 +9,3 @@ variable "location" {
 variable "resource_group_name" {
   type = string
 }
-
-variable "subnet" {
-  type = string
-}
-
-variable "size" {
-  type = string
-}

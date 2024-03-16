@@ -58,3 +58,12 @@ variable "mssql_admin_login_password" {
 variable "dsl_public_network_access_enabled" {
   type = bool
 }
+
+### Virtual Machine ###
+variable "vm_create_flag" {
+  type = bool
+}
+
+variable "vm_size" {
+  type = string
+}

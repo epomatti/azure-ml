@@ -19,7 +19,7 @@ resource "azurerm_storage_account" "lake" {
   network_rules {
     default_action             = "Deny"
     ip_rules                   = var.ip_network_rules
-    virtual_network_subnet_ids = []
+    virtual_network_subnet_ids = [var.subnet_id]
     bypass                     = ["AzureServices"]
   }
 

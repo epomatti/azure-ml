@@ -38,3 +38,7 @@ variable "localfw_start_ip_address" {
 variable "localfw_end_ip_address" {
   type = string
 }
+
+variable "subnet_id" {
+  type = string
+}

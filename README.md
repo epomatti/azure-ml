@@ -8,8 +8,10 @@ Azure Machine Learning workspace with private datastores connected with private 
 
 Copy the template `.auto.tfvars` configuration file:
 
+> 💡 Prefer a private workspace, or check the public workspace [section](#public-aml-workspace) for more information
+
 ```sh
-cp config/template.tfvars .auto.tfvars
+cp config/template-private.tfvars .auto.tfvars
 ```
 
 Set the `allowed_ip_address` to allow connectivity to Azure.
@@ -60,6 +62,14 @@ It's time to connect the data sources to the AML workspace. These connections sh
 
 **Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
 
+## 5 - VM access
+
+TODO:
+
+## Public AML workspace
+
+TODO:
+
 ---
 
 ### Clean-up
@@ -71,3 +81,6 @@ terraform destroy -auto-approve
 ```
 
 [1]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=azure-cli
+[2]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#limitations
+[3]: https://learn.microsoft.com/en-us/AZURE/machine-learning/how-to-access-data?view=azureml-api-1
+[4]: https://k21academy.com/microsoft-azure/dp-100/datastores-and-datasets-in-azure/
