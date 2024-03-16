@@ -1,6 +1,6 @@
-# Azure ML
+# Azure ML security
 
-Azure Machine Learning workspace with private datastores connected with private endpoints.
+Demonstrating Azure Machine Learning workspace security features, primarily network, with private datastores via private endpoints, as well as a workspace private endpoint.
 
 <img src=".assets/aml-architecture.png" />
 
