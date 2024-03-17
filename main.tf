@@ -8,6 +8,10 @@ terraform {
       source  = "hashicorp/azuread"
       version = "2.47.0"
     }
+    azapi = {
+      source  = "Azure/azapi"
+      version = "1.12.1"
+    }
   }
 }
 
@@ -122,6 +126,13 @@ module "ml_workspace" {
   data_lake_id = module.data_lake.id
   blobs_id     = module.blobs.id
 }
+
+# TODO: Implement outbound rules
+# module "ml_outbound_rules" {
+#   source           = "./modules/ml/outbound-rules"
+#   aml_workspace_id = module.ml_workspace.aml_workspace_id
+#   data_lake_id     = module.data_lake.id
+# }
 
 module "ml_private_endpoint" {
   source              = "./modules/ml-pe"

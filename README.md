@@ -70,6 +70,26 @@ To complete the process via Terraform, a private endpoint must be manually appro
 
 Once all resources are created, the data stores must be registered in the outbound rules section in order to use them securely via private connections.
 
+To use the CLI, install the [ML extension][7]:
+
+```sh
+az extension add -n ml
+```
+
+And then create the rules:
+
+```sh
+az ml workspace outbound-rule set -g rg-litware \
+    --rule datalake \
+    --type private_endpoint \
+    --workspace-name mlw-litware<abc123> \
+    --service-resource-id <ID> \
+    --spark-enabled true \
+    --subresource-target dfs
+```
+
+Or, it might be easier via the Portal integration:
+
 <img src=".assets/aml-outbound-rules.png" />
 
 It might be required to perform manual private endpoint approvals, such as in this example for the SQL Server:
@@ -143,3 +163,4 @@ terraform destroy -auto-approve
 [4]: https://k21academy.com/microsoft-azure/dp-100/datastores-and-datasets-in-azure/
 [5]: https://github.com/MicrosoftDocs/azure-docs/issues/120843
 [6]: https://stackoverflow.com/q/78176515/3231778
+[7]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli?view=azureml-api-2&tabs=public
