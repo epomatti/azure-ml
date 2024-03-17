@@ -90,3 +90,15 @@ resource "azurerm_role_assignment" "lake_contributor" {
   role_definition_name = "Contributor"
   principal_id         = azurerm_user_assigned_identity.mlw.principal_id
 }
+
+resource "azurerm_role_assignment" "blobs" {
+  scope                = var.blobs_id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = azurerm_user_assigned_identity.mlw.principal_id
+}
+
+resource "azurerm_role_assignment" "blobs_contributor" {
+  scope                = var.blobs_id
+  role_definition_name = "Contributor"
+  principal_id         = azurerm_user_assigned_identity.mlw.principal_id
+}

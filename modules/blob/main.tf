@@ -43,10 +43,10 @@ locals {
   file = "contacts.csv"
 }
 
-# resource "azurerm_storage_blob" "contacts_csv" {
-#   name                   = local.file
-#   storage_account_name   = azurerm_storage_account.blob.name
-#   storage_container_name = azurerm_storage_container.blobs.name
-#   type                   = "Block"
-#   source                 = "${path.module}/${local.file}"
-# }
+resource "azurerm_storage_blob" "contacts_csv" {
+  name                   = local.file
+  storage_account_name   = azurerm_storage_account.blob.name
+  storage_container_name = azurerm_storage_container.blobs.name
+  type                   = "Block"
+  source                 = "${path.module}/${local.file}"
+}

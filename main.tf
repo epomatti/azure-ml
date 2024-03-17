@@ -120,6 +120,7 @@ module "ml_workspace" {
   container_registry_id         = module.cr.id
 
   data_lake_id = module.data_lake.id
+  blobs_id     = module.blobs.id
 }
 
 module "ml_private_endpoint" {

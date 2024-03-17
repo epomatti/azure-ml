@@ -33,3 +33,7 @@ variable "container_registry_id" {
 variable "data_lake_id" {
   type = string
 }
+
+variable "blobs_id" {
+  type = string
+}

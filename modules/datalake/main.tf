@@ -49,29 +49,13 @@ locals {
   file = "contacts.csv"
 }
 
-# resource "azurerm_storage_blob" "csv" {
-#   name                   = local.file
-#   storage_account_name   = azurerm_storage_account.lake.name
-#   storage_container_name = azurerm_storage_data_lake_gen2_filesystem.data.name
-#   type                   = "Block"
-#   source                 = "${path.module}/${local.file}"
-# }
-
-# resource "azurerm_storage_data_lake_gen2_path" "files" {
-#   path               = "files"
-#   filesystem_name    = azurerm_storage_data_lake_gen2_filesystem.data.name
-#   storage_account_id = azurerm_storage_account.lake.id
-#   resource           = "directory"
-# }
-
-# resource "azurerm_storage_blob" "csv2" {
-#   name                   = "files/${local.file}"
-#   storage_account_name   = azurerm_storage_account.lake.name
-#   storage_container_name = azurerm_storage_data_lake_gen2_filesystem.data.name
-
-#   type   = "Block"
-#   source = "${path.module}/${local.file}"
-# }
+resource "azurerm_storage_blob" "csv" {
+  name                   = local.file
+  storage_account_name   = azurerm_storage_account.lake.name
+  storage_container_name = azurerm_storage_data_lake_gen2_filesystem.data.name
+  type                   = "Block"
+  source                 = "${path.module}/${local.file}"
+}
 
 # Adds permission to the Application Registration for the datastores
 # resource "azurerm_role_assignment" "app_registration_contributor" {
