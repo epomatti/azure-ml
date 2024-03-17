@@ -8,15 +8,15 @@ Demonstrating Azure Machine Learning workspace security features, primarily netw
 
 Copy the template `.auto.tfvars` configuration file:
 
-> 💡 Prefer a private workspace when possible, or check the public workspace [section](#public-aml-workspace) for more information
+> 💡 A public workspace has some [limitations](#issues-and-limitations) which need extra configuration when using private datastores. Prefer a private workspace when possible.
 
 ```sh
-cp config/template-step1.tfvars .auto.tfvars
+cp config/template-public-workspace.tfvars .auto.tfvars
 ```
 
 Set the `allowed_ip_address` to allow connectivity to Azure.
 
-Optionally, generate an SSH key pair to be used for compute node connection:
+Generate an SSH key pair to be used for compute node connection:
 
 ```sh
 mkdir keys
@@ -80,11 +80,11 @@ It might be required to perform manual private endpoint approvals, such as in th
 
 It's time to connect the data sources to the AML workspace. These connections should happen via private endpoints. Datastore connection is documented, such as in [this page][3] or [this article][4].
 
-**Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
+👉 **Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
 
-**Register the datastore** in order to securely and productively connect to data resources.
+👉 **Register the datastore** in order to securely and productively connect to data resources.
 
-Once the datastores are registered, thy become usable via notebooks. In this example a file is downloaded from a Blob storage.
+Once the datastores are registered, they become usable via notebooks. In the next example a file is downloaded from a Blob storage.
 
 ```python
 import os

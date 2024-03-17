@@ -5,9 +5,11 @@ workload = "litware"
 # The IPv4 from where you'll access the resources
 allowed_ip_address = "" // TODO: Add your IP address
 
-# Machine Learning
+# Machine Learning - Workspace
 mlw_public_network_access_enabled = true
+mlw_create_private_endpoint_flag  = false
 
+# Machine Learning - Compute
 mlw_instance_create_flag             = false
 mlw_instance_node_public_ip_enabled  = true
 mlw_instance_vm_size                 = "STANDARD_D2AS_V4"
