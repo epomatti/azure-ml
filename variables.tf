@@ -67,6 +67,10 @@ variable "dsl_public_network_access_enabled" {
   type = bool
 }
 
+variable "blob_public_network_access_enabled" {
+  type = bool
+}
+
 ### Virtual Machine ###
 variable "vm_create_flag" {
   type = bool

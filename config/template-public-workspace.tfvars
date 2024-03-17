@@ -24,7 +24,8 @@ mssql_admin_login                   = "sqladmin"
 mssql_admin_login_password          = "P4ssw0rd!2023"
 
 # Data lake
-dsl_public_network_access_enabled = true
+dsl_public_network_access_enabled  = true
+blob_public_network_access_enabled = true
 
 # Virtual Machine
 vm_create_flag = false

@@ -84,7 +84,7 @@ module "blobs" {
   workload                               = "${var.workload}${local.affix}"
   resource_group_name                    = azurerm_resource_group.default.name
   location                               = azurerm_resource_group.default.location
-  public_network_access_enabled          = var.dsl_public_network_access_enabled
+  public_network_access_enabled          = var.blob_public_network_access_enabled
   ip_network_rules                       = [var.allowed_ip_address]
   datastores_service_principal_object_id = module.entra.service_principal_object_id
   subnet_id                              = module.vnet.default_subnet_id
