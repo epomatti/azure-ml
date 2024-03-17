@@ -78,7 +78,7 @@ It might be required to perform manual private endpoint approvals, such as in th
 
 ## 4 - Datastores
 
-It's time to connect the data sources to the AML workspace. These connections should happen via private endpoints.
+It's time to connect the data sources to the AML workspace. These connections should happen via private endpoints. Datastore connection is documented, such as in [this page][3] or [this article][4].
 
 **Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
 
@@ -121,6 +121,12 @@ Service endpoints should be already created for the datastores, so next step wou
 
 AML components resources should also be set to private if possible. For example, the workspace storage needs to be visible to the users in the private network, but not from the internet in this use case.
 
+## Issues and limitations
+
+There are some [limitations][2] when using a public access which will need some special configuration. I've opened [this thread][5] in which I'm asking Msft to add further details on which combinations are actually validar or invalid, and what additional configuration is required.
+
+I've also ran into [this issue][6] where creating a `Dataset` is not working.
+
 ---
 
 ### Clean-up
@@ -132,7 +138,8 @@ terraform destroy -auto-approve
 ```
 
 [1]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=azure-cli
-[2]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#limitations
+[2]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#enable-public-access
 [3]: https://learn.microsoft.com/en-us/AZURE/machine-learning/how-to-access-data?view=azureml-api-1
 [4]: https://k21academy.com/microsoft-azure/dp-100/datastores-and-datasets-in-azure/
-[5]: https://stackoverflow.com/q/78176515/3231778
+[5]: https://github.com/MicrosoftDocs/azure-docs/issues/120843
+[6]: https://stackoverflow.com/q/78176515/3231778
