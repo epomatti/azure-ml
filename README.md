@@ -11,7 +11,7 @@ Copy the template `.auto.tfvars` configuration file:
 > 💡 Prefer a private workspace, or check the public workspace [section](#public-aml-workspace) for more information
 
 ```sh
-cp config/template-private.tfvars .auto.tfvars
+cp config/template-step1.tfvars .auto.tfvars
 ```
 
 Set the `allowed_ip_address` to allow connectivity to Azure.
