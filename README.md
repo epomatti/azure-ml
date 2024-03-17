@@ -8,7 +8,7 @@ Demonstrating Azure Machine Learning workspace security features, primarily netw
 
 Copy the template `.auto.tfvars` configuration file:
 
-> 💡 Prefer a private workspace, or check the public workspace [section](#public-aml-workspace) for more information
+> 💡 Prefer a private workspace when possible, or check the public workspace [section](#public-aml-workspace) for more information
 
 ```sh
 cp config/template-step1.tfvars .auto.tfvars
@@ -82,13 +82,44 @@ It's time to connect the data sources to the AML workspace. These connections sh
 
 **Create a secret** for the pre-create Application Registration in Entra ID that can be used to setup connections to the data lake. Optionally, it can also be used for the SQL Server, but it will require an external authentication setup which is not covered here - SQL authentication should be enough for this demo.
 
-## 5 - VM access
+**Register the datastore** in order to securely and productively connect to data resources.
 
-TODO:
+Once the datastores are registered, thy become usable via notebooks. In this example a file is downloaded from a Blob storage.
 
-## Public AML workspace
+```python
+import os
+import azureml.core
+from azureml.core import Workspace, Datastore, Dataset
 
-TODO:
+ws = Workspace.from_config()
+
+datastore = Datastore.get(ws, datastore_name='blobs')
+datastore.download(target_path="./output", prefix="contacts.csv", overwrite=False)
+
+arr = os.listdir('./output')
+print(arr)
+
+file = open("./output/contacts.csv", "r").read()
+print(file)
+```
+
+## 5 - Setup for a private AML workspace
+
+The most secure architecture for AML would be a private AML workspace, meaning that the workspace would be accessible only via a private endpoint, and the dependent resources and data stores also accessible via private connections.
+
+To enable private access for this project, change these variables as follows:
+
+```terraform
+mlw_public_network_access_enabled = true
+mlw_create_private_endpoint_flag  = true
+vm_create_flag                    = false
+```
+
+Then `apply` the configuration. Once applied, access tot he AML workspace should be possible only using the VM.
+
+Service endpoints should be already created for the datastores, so next step would be to disable public access to storages and databases and make the architecture 100% private.
+
+AML components resources should also be set to private if possible. For example, the workspace storage needs to be visible to the users in the private network, but not from the internet in this use case.
 
 ---
 
@@ -104,3 +135,4 @@ terraform destroy -auto-approve
 [2]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-private-link?view=azureml-api-2&tabs=cli#limitations
 [3]: https://learn.microsoft.com/en-us/AZURE/machine-learning/how-to-access-data?view=azureml-api-1
 [4]: https://k21academy.com/microsoft-azure/dp-100/datastores-and-datasets-in-azure/
+[5]: https://stackoverflow.com/q/78176515/3231778

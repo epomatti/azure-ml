@@ -125,6 +125,7 @@ module "ml_workspace" {
 
 module "ml_private_endpoint" {
   source              = "./modules/ml-pe"
+  count               = var.mlw_create_private_endpoint_flag ? 1 : 0
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   vnet_id             = module.vnet.vnet_id
