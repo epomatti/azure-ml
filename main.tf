@@ -92,6 +92,7 @@ module "blobs" {
 
 module "mssql" {
   source              = "./modules/mssql"
+  count               = var.mssql_create_flag ? 1 : 0
   workload            = var.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
