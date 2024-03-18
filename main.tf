@@ -128,13 +128,6 @@ module "ml_workspace" {
   blobs_id     = module.blobs.id
 }
 
-# TODO: Implement outbound rules
-# module "ml_outbound_rules" {
-#   source           = "./modules/ml/outbound-rules"
-#   aml_workspace_id = module.ml_workspace.aml_workspace_id
-#   data_lake_id     = module.data_lake.id
-# }
-
 module "ml_private_endpoint" {
   source              = "./modules/ml-pe"
   count               = var.mlw_create_private_endpoint_flag ? 1 : 0
