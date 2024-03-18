@@ -9,3 +9,11 @@ variable "location" {
 variable "workload" {
   type = string
 }
+
+variable "subnet_id" {
+  type = string
+}
+
+variable "allowed_ip_addresses" {
+  type = list(string)
+}

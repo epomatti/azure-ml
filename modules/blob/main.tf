@@ -10,8 +10,8 @@ resource "azurerm_storage_account" "blob" {
   enable_https_traffic_only = true
   min_tls_version           = "TLS1_2"
 
-  # Networking
-  public_network_access_enabled = var.public_network_access_enabled
+  # Further controlled by network_rules below
+  public_network_access_enabled = true
 
   network_rules {
     default_action             = "Deny"

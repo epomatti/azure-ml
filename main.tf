@@ -23,8 +23,9 @@ resource "random_string" "affix" {
 }
 
 locals {
-  affix          = random_string.affix.result
-  ssh_public_key = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
+  affix                = random_string.affix.result
+  ssh_public_key       = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
+  allowed_ip_addresses = [var.allowed_ip_address]
 }
 
 resource "azurerm_resource_group" "default" {
@@ -51,13 +52,17 @@ module "storage" {
   workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  ip_network_rules    = local.allowed_ip_addresses
+  subnet_id           = module.vnet.default_subnet_id
 }
 
 module "keyvault" {
-  source              = "./modules/keyvault"
-  workload            = "${var.workload}${local.affix}"
-  resource_group_name = azurerm_resource_group.default.name
-  location            = azurerm_resource_group.default.location
+  source               = "./modules/keyvault"
+  workload             = "${var.workload}${local.affix}"
+  resource_group_name  = azurerm_resource_group.default.name
+  location             = azurerm_resource_group.default.location
+  subnet_id            = module.vnet.default_subnet_id
+  allowed_ip_addresses = local.allowed_ip_addresses
 }
 
 module "cr" {
@@ -77,8 +82,7 @@ module "data_lake" {
   workload                               = "${var.workload}${local.affix}"
   resource_group_name                    = azurerm_resource_group.default.name
   location                               = azurerm_resource_group.default.location
-  public_network_access_enabled          = var.dsl_public_network_access_enabled
-  ip_network_rules                       = [var.allowed_ip_address]
+  ip_network_rules                       = local.allowed_ip_addresses
   datastores_service_principal_object_id = module.entra.service_principal_object_id
   subnet_id                              = module.vnet.default_subnet_id
 }
@@ -88,8 +92,7 @@ module "blobs" {
   workload                               = "${var.workload}${local.affix}"
   resource_group_name                    = azurerm_resource_group.default.name
   location                               = azurerm_resource_group.default.location
-  public_network_access_enabled          = var.blob_public_network_access_enabled
-  ip_network_rules                       = [var.allowed_ip_address]
+  ip_network_rules                       = local.allowed_ip_addresses
   datastores_service_principal_object_id = module.entra.service_principal_object_id
   subnet_id                              = module.vnet.default_subnet_id
 }
