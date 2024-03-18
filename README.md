@@ -1,4 +1,4 @@
-# Azure ML security
+# Azure ML with Private Endpoints
 
 Demonstrating Azure Machine Learning workspace security features, primarily network, with private datastores via private endpoints, as well as a workspace private endpoint.
 
