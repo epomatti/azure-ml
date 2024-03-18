@@ -157,7 +157,6 @@ As per Microsoft [documentation][8], a Firewall with `Standard` SKU will be crea
 
 To avoid this, one option is using a customer-managed VNET which is also the [recommended option][9].
 
-
 ## Issues and limitations
 
 There are some [limitations][2] when using a public access which will need some special configuration. I've opened [this thread][5] in which I'm asking Msft to add further details on which combinations are actually validar or invalid, and what additional configuration is required.
