@@ -147,6 +147,10 @@ There are some [limitations][2] when using a public access which will need some 
 
 I've also ran into [this issue][6] where creating a `Dataset` is not working.
 
+It is important to notice that users of the Azure ML Studio must have line of sight of the workspace storage. Here is an example with the console traces demonstrating that:
+
+<img src=".assets/aml-line-of-sight.png" />
+
 ---
 
 ### Clean-up
