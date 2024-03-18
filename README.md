@@ -34,9 +34,15 @@ terraform init
 terraform apply -auto-approve
 ```
 
-Once all resources are created run the step 2.
+(Optional) To manually trigger the managed VNET creation, use the CLI:
 
-> ℹ️ The managed VNET is created along with the compute in the next step. Private endpoints should active after or available for approval.
+> ℹ️ By default, the managed VNET is created along with the compute. Private endpoints should active after or available for approval.
+
+```sh
+az ml workspace provision-network -g rg-litware -n <my_workspace_name>
+```
+
+Once all resources are created run the step 2.
 
 The workspace will be created with `AllowOnlyApprovedOutbound`. Configure the outbound access in the [managed VNET][1] using a preferred interface (add the data lake and the SQL database), which will enable secure outbound access via private endpoints.
 
@@ -123,6 +129,8 @@ file = open("./output/contacts.csv", "r").read()
 print(file)
 ```
 
+Alternatively, prefer using SDK v2 for [workspace][10] and [data][11] operations.
+
 ## 5 - Private AML workspace setup
 
 The most secure architecture for AML would be a private AML workspace, meaning that the workspace would be accessible only via a private endpoint, and the dependent resources and data stores also accessible via private connections.
@@ -140,6 +148,15 @@ Then `apply` the configuration. Once applied, access tot he AML workspace should
 Service endpoints should be already created for the datastores, so next step would be to disable public access to storages and databases and make the architecture 100% private.
 
 AML components resources should also be set to private if possible. For example, the workspace storage needs to be visible to the users in the private network, but not from the internet in this use case.
+
+## Firewall costs
+
+As per Microsoft [documentation][8], a Firewall with `Standard` SKU will be created and the respective cost increase will apply.
+
+> FQDN outbound rules are implemented using Azure Firewall. If you use outbound FQDN rules, charges for Azure Firewall are added to your billing. The Azure Firewall (standard SKU) is provisioned by Azure Machine Learning.
+
+To avoid this, one option is using a customer-managed VNET which is also the [recommended option][9].
+
 
 ## Issues and limitations
 
@@ -168,3 +185,7 @@ terraform destroy -auto-approve
 [5]: https://github.com/MicrosoftDocs/azure-docs/issues/120843
 [6]: https://stackoverflow.com/q/78176515/3231778
 [7]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-configure-cli?view=azureml-api-2&tabs=public
+[8]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-managed-network?view=azureml-api-2&tabs=azure-cli#pricing
+[9]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-network-isolation-planning?view=azureml-api-2#recommended-architecture-use-your-azure-vnet
+[10]: https://learn.microsoft.com/en-us/azure/machine-learning/migrate-to-v2-resource-workspace?view=azureml-api-2
+[11]: https://learn.microsoft.com/en-us/azure/machine-learning/migrate-to-v2-assets-data?view=azureml-api-2
