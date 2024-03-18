@@ -70,6 +70,9 @@ module "cr" {
   workload            = "${var.workload}${local.affix}"
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
+  allowed_ip_address  = var.allowed_ip_address
+  allowed_subnet_id   = module.vnet.default_subnet_id
+  vnet_id             = module.vnet.vnet_id
 }
 
 module "entra" {
