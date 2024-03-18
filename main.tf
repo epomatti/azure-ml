@@ -107,14 +107,13 @@ module "mssql" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  public_network_access_enabled = var.mssql_public_network_access_enabled
-  sku                           = var.mssql_sku
-  max_size_gb                   = var.mssql_max_size_gb
-  admin_login                   = var.mssql_admin_login
-  admin_login_password          = var.mssql_admin_login_password
-  localfw_start_ip_address      = var.allowed_ip_address
-  localfw_end_ip_address        = var.allowed_ip_address
-  subnet_id                     = module.vnet.default_subnet_id
+  sku                      = var.mssql_sku
+  max_size_gb              = var.mssql_max_size_gb
+  admin_login              = var.mssql_admin_login
+  admin_login_password     = var.mssql_admin_login_password
+  localfw_start_ip_address = var.allowed_ip_address
+  localfw_end_ip_address   = var.allowed_ip_address
+  subnet_id                = module.vnet.default_subnet_id
 }
 
 module "ml_workspace" {

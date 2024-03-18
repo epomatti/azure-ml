@@ -5,9 +5,11 @@ resource "azurerm_mssql_server" "default" {
   version             = "12.0"
   minimum_tls_version = "1.2"
 
-  public_network_access_enabled = var.public_network_access_enabled
-  administrator_login           = var.admin_login
-  administrator_login_password  = var.admin_login_password
+  # Further controlled by firewall rules below
+  public_network_access_enabled = true
+
+  administrator_login          = var.admin_login
+  administrator_login_password = var.admin_login_password
 
   identity {
     type = "SystemAssigned"

@@ -42,10 +42,6 @@ variable "mssql_create_flag" {
   type = bool
 }
 
-variable "mssql_public_network_access_enabled" {
-  type = bool
-}
-
 variable "mssql_sku" {
   type = string
 }

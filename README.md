@@ -8,10 +8,10 @@ Demonstrating Azure Machine Learning workspace security features, primarily netw
 
 Copy the template `.auto.tfvars` configuration file:
 
-> 💡 A public workspace has some [limitations](#issues-and-limitations) which need extra configuration when using private datastores. Prefer a private workspace when possible.
+> 💡 A public workspace has some [limitations](#issues-and-limitations) when connecting to private resources, which need extra configuration when using private datastores.
 
 ```sh
-cp config/template-public-workspace.tfvars .auto.tfvars
+cp config/template.tfvars .auto.tfvars
 ```
 
 Set the `allowed_ip_address` to allow connectivity to Azure.
