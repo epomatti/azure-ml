@@ -123,16 +123,16 @@ file = open("./output/contacts.csv", "r").read()
 print(file)
 ```
 
-## 5 - Setup for a private AML workspace
+## 5 - Private AML workspace setup
 
 The most secure architecture for AML would be a private AML workspace, meaning that the workspace would be accessible only via a private endpoint, and the dependent resources and data stores also accessible via private connections.
 
 To enable private access for this project, change these variables as follows:
 
 ```terraform
-mlw_public_network_access_enabled = true
+mlw_public_network_access_enabled = false
 mlw_create_private_endpoint_flag  = true
-vm_create_flag                    = false
+vm_create_flag                    = true
 ```
 
 Then `apply` the configuration. Once applied, access tot he AML workspace should be possible only using the VM.
