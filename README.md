@@ -1,6 +1,6 @@
 # Azure ML with Private Endpoints
 
-Demonstrating Azure Machine Learning workspace security features, primarily network, with private datastores via private endpoints, as well as a workspace private endpoint.
+Azure Machine Learning workspace security features, deployed to a managed VNET, with private datastores via private endpoints, as well as an optional workspace private endpoint.
 
 <img src=".assets/aml-architecture.png" />
 
@@ -8,7 +8,8 @@ Demonstrating Azure Machine Learning workspace security features, primarily netw
 
 Copy the template `.auto.tfvars` configuration file:
 
-> 💡 A public workspace has some [limitations](#issues-and-limitations) when connecting to private resources, which need extra configuration when using private datastores.
+> [!IMPORTANT]
+> A public workspace has some [limitations](#issues-and-limitations) when connecting to private resources, which need extra configuration when using private datastores.
 
 ```sh
 cp config/template.tfvars .auto.tfvars
@@ -36,7 +37,8 @@ terraform apply -auto-approve
 
 (Optional) To manually trigger the managed VNET creation, use the CLI:
 
-> ℹ️ By default, the managed VNET is created along with the compute. Private endpoints should active after or available for approval.
+> [!TIP]
+> By default, the managed VNET is created along with the compute. Private endpoints should be active after or available for approval.
 
 ```sh
 az ml workspace provision-network -g rg-litware -n <my_workspace_name>
@@ -44,9 +46,21 @@ az ml workspace provision-network -g rg-litware -n <my_workspace_name>
 
 Once all resources are created run the step 2.
 
-The workspace will be created with `AllowOnlyApprovedOutbound`. Configure the outbound access in the [managed VNET][1] using a preferred interface (add the data lake and the SQL database), which will enable secure outbound access via private endpoints.
+For a managed VNET setup, there are three isolation modes:
 
-> 💡 A Container Registry with `Premium` SKU is required.
+| Isolation Mode | Terraform value |
+|-----|-----|
+| Disabled | `Disabled` |
+| Allow Internet Outbound | `AllowInternetOutbound` |            
+| Allow Only Approved Outbound | `AllowOnlyApprovedOutbound` |
+
+> [!IMPORTANT]
+> Using `AllowOnlyApprovedOutbound` will create an Azure Firewall with Standard SKU, which adds significant costs.
+
+The workspace will be created with `AllowInternetOutbound`. Configure the outbound access in the [managed VNET][1] using a preferred interface (add the data lake and the SQL database), which will enable secure outbound access via private endpoints.
+
+> [!IMPORTANT]
+> A Container Registry with `Premium` SKU is required.
 
 ### Step 2 - Create the AML instance
 
@@ -60,7 +74,8 @@ mlw_instance_create_flag = true
 
 Apply again:
 
-> ℹ️ This step will take 10-15 minutes to complete.
+> [!TIP]
+> This step will take 10-15 minutes to complete.
 
 ```sh
 terraform apply -auto-approve
