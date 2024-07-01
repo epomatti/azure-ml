@@ -1,7 +1,3 @@
-variable "location" {
-  type = string
-}
-
 variable "machine_learning_workspace_id" {
   type = string
 }

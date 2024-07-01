@@ -37,3 +37,7 @@ variable "data_lake_id" {
 variable "blobs_id" {
   type = string
 }
+
+variable "managed_network_isolation_mode" {
+  type = string
+}

@@ -3,15 +3,16 @@ location = "eastus2"
 workload = "litware"
 
 # The IPv4 from where you'll access the resources
-allowed_ip_address = "" // TODO: Set your IP address
+allowed_ip_address = "<YOUR IP ADDRESS>"
 
 # Machine Learning - Workspace
-mlw_public_network_access_enabled = true
-mlw_create_private_endpoint_flag  = false
+mlw_public_network_access_enabled  = true
+mlw_create_private_endpoint_flag   = false
+mlw_managed_network_isolation_mode = "AllowInternetOutbound" # Disabled, AllowOnlyApprovedOutbound, AllowInternetOutbound
 
 # Machine Learning - Compute
 mlw_instance_create_flag             = false
-mlw_instance_node_public_ip_enabled  = true
+mlw_instance_node_public_ip_enabled  = false
 mlw_instance_vm_size                 = "STANDARD_D2AS_V4"
 mlw_instance_ssh_public_key_rel_path = "keys/ssh_key.pub"
 

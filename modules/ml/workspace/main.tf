@@ -26,7 +26,7 @@ resource "azurerm_machine_learning_workspace" "default" {
   }
 
   managed_network {
-    isolation_mode = "AllowOnlyApprovedOutbound"
+    isolation_mode = var.managed_network_isolation_mode
   }
 
   depends_on = [

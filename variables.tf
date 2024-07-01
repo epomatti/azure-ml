@@ -21,6 +21,10 @@ variable "mlw_create_private_endpoint_flag" {
   type = bool
 }
 
+variable "mlw_managed_network_isolation_mode" {
+  type = string
+}
+
 variable "mlw_instance_node_public_ip_enabled" {
   type = bool
 }

@@ -60,11 +60,11 @@ For a managed VNET setup, there are three isolation modes:
 The workspace will be created with `AllowInternetOutbound`. Configure the outbound access in the [managed VNET][1] using a preferred interface (add the data lake and the SQL database), which will enable secure outbound access via private endpoints.
 
 > [!IMPORTANT]
-> A Container Registry with `Premium` SKU is required.
+> A Container Registry with `Premium` SKU is required for private endpoints.
 
 ### Step 2 - Create the AML instance
 
-Once the base resources are ready, create the 
+Once the base resources are ready, set up the configuration to create the AML Compute Instance.
 
 Set the `mlw_instance_create_flag` variable to `true`:
 

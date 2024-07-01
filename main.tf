@@ -2,11 +2,11 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.96.0"
+      version = "3.110.0"
     }
     azuread = {
       source  = "hashicorp/azuread"
-      version = "2.47.0"
+      version = "2.53.1"
     }
   }
 }
@@ -118,11 +118,12 @@ module "ml_workspace" {
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
-  public_network_access_enabled = var.mlw_public_network_access_enabled
-  application_insights_id       = module.monitor.application_insights_id
-  storage_account_id            = module.storage.storage_account_id
-  key_vault_id                  = module.keyvault.key_vault_id
-  container_registry_id         = module.cr.id
+  public_network_access_enabled  = var.mlw_public_network_access_enabled
+  managed_network_isolation_mode = var.mlw_managed_network_isolation_mode
+  application_insights_id        = module.monitor.application_insights_id
+  storage_account_id             = module.storage.storage_account_id
+  key_vault_id                   = module.keyvault.key_vault_id
+  container_registry_id          = module.cr.id
 
   data_lake_id = module.data_lake.id
   blobs_id     = module.blobs.id
@@ -141,7 +142,6 @@ module "ml_private_endpoint" {
 module "ml_compute" {
   source   = "./modules/ml/compute"
   count    = var.mlw_instance_create_flag ? 1 : 0
-  location = azurerm_resource_group.default.location
 
   machine_learning_workspace_id   = module.ml_workspace.aml_workspace_id
   instance_vm_size                = var.mlw_instance_vm_size
