@@ -1,11 +1,9 @@
 variable "location" {
-  type    = string
-  default = "eastus2"
+  type = string
 }
 
-variable "workload" {
-  type    = string
-  default = "litware"
+variable "project" {
+  type = string
 }
 
 variable "allowed_ip_address" {

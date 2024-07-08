@@ -11,41 +11,40 @@ terraform {
   }
 }
 
-resource "random_string" "affix" {
-  length  = 6
-  special = false
-  upper   = false
-  numeric = true
+resource "random_integer" "affix" {
+  min = 100
+  max = 999
 }
 
 locals {
-  affix                = random_string.affix.result
+  affix                = random_integer.affix.result
+  workload             = "${var.project}${local.affix}"
   ssh_public_key       = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
   allowed_ip_addresses = [var.allowed_ip_address]
 }
 
 resource "azurerm_resource_group" "default" {
-  name     = "rg-${var.workload}"
+  name     = "rg-${local.workload}"
   location = var.location
 }
 
 module "vnet" {
   source              = "./modules/vnet"
-  workload            = var.workload
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 }
 
 module "monitor" {
   source              = "./modules/monitor"
-  workload            = var.workload
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 }
 
 module "storage" {
   source              = "./modules/storage"
-  workload            = "${var.workload}${local.affix}"
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   ip_network_rules    = local.allowed_ip_addresses
@@ -54,7 +53,7 @@ module "storage" {
 
 module "keyvault" {
   source               = "./modules/keyvault"
-  workload             = "${var.workload}${local.affix}"
+  workload             = local.workload
   resource_group_name  = azurerm_resource_group.default.name
   location             = azurerm_resource_group.default.location
   subnet_id            = module.vnet.default_subnet_id
@@ -63,7 +62,7 @@ module "keyvault" {
 
 module "cr" {
   source              = "./modules/cr"
-  workload            = "${var.workload}${local.affix}"
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   allowed_ip_address  = var.allowed_ip_address
@@ -73,12 +72,12 @@ module "cr" {
 
 module "entra" {
   source   = "./modules/entra"
-  workload = var.workload
+  workload = local.workload
 }
 
 module "data_lake" {
   source                                 = "./modules/datalake"
-  workload                               = "${var.workload}${local.affix}"
+  workload                               = local.workload
   resource_group_name                    = azurerm_resource_group.default.name
   location                               = azurerm_resource_group.default.location
   ip_network_rules                       = local.allowed_ip_addresses
@@ -88,7 +87,7 @@ module "data_lake" {
 
 module "blobs" {
   source                                 = "./modules/blob"
-  workload                               = "${var.workload}${local.affix}"
+  workload                               = local.workload
   resource_group_name                    = azurerm_resource_group.default.name
   location                               = azurerm_resource_group.default.location
   ip_network_rules                       = local.allowed_ip_addresses
@@ -99,7 +98,7 @@ module "blobs" {
 module "mssql" {
   source              = "./modules/mssql"
   count               = var.mssql_create_flag ? 1 : 0
-  workload            = var.workload
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
@@ -114,7 +113,7 @@ module "mssql" {
 
 module "ml_workspace" {
   source              = "./modules/ml/workspace"
-  workload            = "${var.workload}${local.affix}"
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
 
@@ -140,8 +139,8 @@ module "ml_private_endpoint" {
 }
 
 module "ml_compute" {
-  source   = "./modules/ml/compute"
-  count    = var.mlw_instance_create_flag ? 1 : 0
+  source = "./modules/ml/compute"
+  count  = var.mlw_instance_create_flag ? 1 : 0
 
   machine_learning_workspace_id   = module.ml_workspace.aml_workspace_id
   instance_vm_size                = var.mlw_instance_vm_size
@@ -152,7 +151,7 @@ module "ml_compute" {
 module "vm" {
   source              = "./modules/vm"
   count               = var.vm_create_flag ? 1 : 0
-  workload            = var.workload
+  workload            = local.workload
   resource_group_name = azurerm_resource_group.default.name
   location            = azurerm_resource_group.default.location
   size                = var.vm_size
