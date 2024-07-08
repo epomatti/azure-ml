@@ -23,21 +23,23 @@ variable "mlw_managed_network_isolation_mode" {
   type = string
 }
 
-variable "mlw_instance_node_public_ip_enabled" {
-  type = bool
-}
+### AML Compute Instance ###
 
-variable "mlw_instance_create_flag" {
-  type = bool
-}
+# variable "mlw_instance_node_public_ip_enabled" {
+#   type = bool
+# }
 
-variable "mlw_instance_vm_size" {
-  type = string
-}
+# variable "mlw_instance_create_flag" {
+#   type = bool
+# }
 
-variable "mlw_instance_ssh_public_key_rel_path" {
-  type = string
-}
+# variable "mlw_instance_vm_size" {
+#   type = string
+# }
+
+# variable "mlw_instance_ssh_public_key_rel_path" {
+#   type = string
+# }
 
 ### MSSQL ###
 variable "mssql_create_flag" {

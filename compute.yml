@@ -1,0 +1,7 @@
+$schema: https://azuremlschemas.azureedge.net/latest/computeInstance.schema.json
+name: instance002
+type: computeinstance
+size: STANDARD_D2AS_V4
+ssh_public_access_enabled: false
+identity:
+  type: system_assigned

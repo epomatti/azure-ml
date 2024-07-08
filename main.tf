@@ -19,7 +19,7 @@ resource "random_integer" "affix" {
 locals {
   affix                = random_integer.affix.result
   workload             = "${var.project}${local.affix}"
-  ssh_public_key       = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
+  # ssh_public_key       = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
   allowed_ip_addresses = [var.allowed_ip_address]
 }
 
@@ -138,15 +138,15 @@ module "ml_private_endpoint" {
   aml_workspace_id    = module.ml_workspace.aml_workspace_id
 }
 
-module "ml_compute" {
-  source = "./modules/ml/compute"
-  count  = var.mlw_instance_create_flag ? 1 : 0
+# module "ml_compute" {
+#   source = "./modules/ml/compute"
+#   count  = var.mlw_instance_create_flag ? 1 : 0
 
-  machine_learning_workspace_id   = module.ml_workspace.aml_workspace_id
-  instance_vm_size                = var.mlw_instance_vm_size
-  instance_node_public_ip_enabled = var.mlw_instance_node_public_ip_enabled
-  ssh_public_key                  = local.ssh_public_key
-}
+#   machine_learning_workspace_id   = module.ml_workspace.aml_workspace_id
+#   instance_vm_size                = var.mlw_instance_vm_size
+#   instance_node_public_ip_enabled = var.mlw_instance_node_public_ip_enabled
+#   ssh_public_key                  = local.ssh_public_key
+# }
 
 module "vm" {
   source              = "./modules/vm"

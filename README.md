@@ -17,7 +17,7 @@ cp config/template.tfvars .auto.tfvars
 
 Set the `allowed_ip_address` to allow connectivity to Azure.
 
-Generate an SSH key pair to be used for compute node connection:
+(Optional) If using a public compute, generate an SSH key pair to be used for connection:
 
 ```sh
 mkdir keys
@@ -33,15 +33,6 @@ Apply the resources:
 ```sh
 terraform init
 terraform apply -auto-approve
-```
-
-(Optional) To manually trigger the managed VNET creation, use the CLI:
-
-> [!TIP]
-> By default, the managed VNET is created along with the compute. Private endpoints should be active after or available for approval.
-
-```sh
-az ml workspace provision-network -g rg-litware -n <my_workspace_name>
 ```
 
 Once all resources are created run the step 2.
@@ -62,28 +53,35 @@ The workspace will be created with `AllowInternetOutbound`. Configure the outbou
 > [!IMPORTANT]
 > A Container Registry with `Premium` SKU is required for private endpoints.
 
-### Step 2 - Create the AML instance
+### Step 2 - Create the AML Compute Instance
 
-Once the base resources are ready, set up the configuration to create the AML Compute Instance.
-
-Set the `mlw_instance_create_flag` variable to `true`:
-
-```terraform
-mlw_instance_create_flag = true
-```
-
-Apply again:
+> [!NOTE]
+> Due to limitations with the Terraform provider, compute commands will proceed using the Azure CLI.
 
 > [!TIP]
-> This step will take 10-15 minutes to complete.
+> By default, the managed VNET is created along with the compute. Private endpoints should be active after or available for approval.
 
 ```sh
-terraform apply -auto-approve
+az ml workspace provision-network -g rg-litware -n <my_workspace_name>
+```
+
+Create the compute instance. This is using [CLI V2 notation][12]:
+
+> [!WARNING]
+> Current YAML notation does not allow configuring public access, with the exception of SSH. Make sure to use `--enable-node-public-ip false` for increased security as the default is `true`.
+
+```sh
+az ml compute create \
+    --file compute.yml \
+    --resource-group my-resource-group \
+    --workspace-name my-workspace \
+    --enable-node-public-ip false
 ```
 
 To complete the process via Terraform, a private endpoint must be manually approved when the compute is created. I assume this endpoint is required to enable the instances to communicate with the workspace.
 
-> 💡 The execution will halt until the manual approval is done, so keep watching for when the approval is requested.
+> [!IMPORTANT]
+> The execution will halt until the manual approval is done, so keep watching for when the approval is requested.
 
 <img src=".assets/aml-compute-approval.png" width=700 />
 
@@ -203,3 +201,4 @@ terraform destroy -auto-approve
 [9]: https://learn.microsoft.com/en-us/azure/machine-learning/how-to-network-isolation-planning?view=azureml-api-2#recommended-architecture-use-your-azure-vnet
 [10]: https://learn.microsoft.com/en-us/azure/machine-learning/migrate-to-v2-resource-workspace?view=azureml-api-2
 [11]: https://learn.microsoft.com/en-us/azure/machine-learning/migrate-to-v2-assets-data?view=azureml-api-2
+[12]: https://learn.microsoft.com/en-us/azure/machine-learning/reference-yaml-compute-instance?view=azureml-api-2
