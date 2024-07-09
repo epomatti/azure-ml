@@ -62,7 +62,7 @@ The workspace will be created with `AllowInternetOutbound`. Configure the outbou
 > By default, the managed VNET is created along with the compute. Private endpoints should be active after or available for approval.
 
 ```sh
-az ml workspace provision-network -g rg-litware -n <my_workspace_name>
+az ml workspace provision-network -g rg-litware -n <my_workspace_name> --include-spark
 ```
 
 Create the compute instance. This is using [CLI V2 notation][12]:
