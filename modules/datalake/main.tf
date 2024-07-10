@@ -64,14 +64,14 @@ resource "azurerm_storage_blob" "csv" {
 #   principal_id         = var.datastores_service_principal_object_id
 # }
 
-# resource "azurerm_role_assignment" "app_registration" {
-#   scope                = azurerm_storage_account.lake.id
-#   role_definition_name = "Storage Blob Data Contributor"
-#   principal_id         = var.datastores_service_principal_object_id
-# }
+resource "azurerm_role_assignment" "app_registration" {
+  scope                = azurerm_storage_account.lake.id
+  role_definition_name = "Storage Blob Data Contributor"
+  principal_id         = var.datastores_service_principal_object_id
+}
 
-# resource "azurerm_role_assignment" "app_registration_owner" {
-#   scope                = azurerm_storage_account.lake.id
-#   role_definition_name = "Storage Blob Data Owner"
-#   principal_id         = var.datastores_service_principal_object_id
-# }
+resource "azurerm_role_assignment" "app_registration_owner" {
+  scope                = azurerm_storage_account.lake.id
+  role_definition_name = "Storage Blob Data Owner"
+  principal_id         = var.datastores_service_principal_object_id
+}
