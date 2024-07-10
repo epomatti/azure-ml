@@ -38,3 +38,7 @@ variable "localfw_end_ip_address" {
 variable "subnet_id" {
   type = string
 }
+
+variable "aml_identity_principal_id" {
+  type = string
+}

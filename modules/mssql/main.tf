@@ -1,3 +1,9 @@
+data "azurerm_client_config" "current" {}
+
+data "azuread_user" "current" {
+  object_id = data.azurerm_client_config.current.object_id
+}
+
 resource "azurerm_mssql_server" "default" {
   name                = "sqls-${var.workload}"
   resource_group_name = var.resource_group_name
@@ -10,6 +16,12 @@ resource "azurerm_mssql_server" "default" {
 
   administrator_login          = var.admin_login
   administrator_login_password = var.admin_login_password
+
+  azuread_administrator {
+    login_username = data.azuread_user.current.user_principal_name
+    object_id      = data.azurerm_client_config.current.object_id
+    tenant_id      = data.azurerm_client_config.current.tenant_id
+  }
 
   identity {
     type = "SystemAssigned"
@@ -46,4 +58,12 @@ resource "azurerm_mssql_virtual_network_rule" "default" {
   name      = "default-subnet"
   server_id = azurerm_mssql_server.default.id
   subnet_id = var.subnet_id
+}
+
+### AML permissiosn ###
+# This is only to allow data preview within Azure ML. Compute data access will use the Service Principal instead.
+resource "azurerm_role_assignment" "sql_server_contributor" {
+  scope                = azurerm_mssql_server.default.id
+  role_definition_name = "SQL Server Contributor"
+  principal_id         = var.aml_identity_principal_id
 }

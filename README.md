@@ -144,6 +144,52 @@ print(file)
 
 Alternatively, prefer using SDK v2 for [workspace][10] and [data][11] operations.
 
+### SQL Server Service Principal permissions
+
+#### SQL Server
+
+Create the login from an external provider:
+
+```sql
+USE master
+CREATE LOGIN [datastores-litware123] FROM EXTERNAL PROVIDER
+GO
+```
+
+Check the server login:
+
+```sql
+SELECT name, type_desc, type, is_disabled 
+FROM sys.server_principals
+WHERE type_desc like 'external%'  
+```
+
+#### SQL Database
+
+Create the database user associated with the external login:
+
+```sql
+CREATE USER [datastores-litware123] FROM LOGIN [datastores-litware123]
+GO
+```
+
+Check the database user:
+
+```sql
+SELECT name, type_desc, type 
+FROM sys.database_principals 
+WHERE type_desc like 'external%'
+```
+
+Add the necessary permissions to the user:
+
+```sql
+ALTER ROLE db_datareader ADD MEMBER [datastores-litware123];
+ALTER ROLE db_datawriter ADD MEMBER [datastores-litware123];
+ALTER ROLE db_ddladmin ADD MEMBER [datastores-litware123];
+GO
+```
+
 ## 5 - Private AML workspace setup
 
 The most secure architecture for AML would be a private AML workspace, meaning that the workspace would be accessible only via a private endpoint, and the dependent resources and data stores also accessible via private connections.
