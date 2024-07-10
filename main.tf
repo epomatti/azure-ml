@@ -17,8 +17,8 @@ resource "random_integer" "affix" {
 }
 
 locals {
-  affix                = random_integer.affix.result
-  workload             = "${var.project}${local.affix}"
+  affix    = random_integer.affix.result
+  workload = "${var.project}${local.affix}"
   # ssh_public_key       = file("${path.module}/${var.mlw_instance_ssh_public_key_rel_path}")
   allowed_ip_addresses = [var.allowed_ip_address]
 }
