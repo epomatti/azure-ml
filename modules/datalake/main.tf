@@ -57,13 +57,6 @@ resource "azurerm_storage_blob" "csv" {
   source                 = "${path.module}/${local.file}"
 }
 
-# Adds permission to the Application Registration for the datastores
-# resource "azurerm_role_assignment" "app_registration_contributor" {
-#   scope                = azurerm_storage_account.lake.id
-#   role_definition_name = "Contributor"
-#   principal_id         = var.datastores_service_principal_object_id
-# }
-
 resource "azurerm_role_assignment" "app_registration" {
   scope                = azurerm_storage_account.lake.id
   role_definition_name = "Storage Blob Data Contributor"
